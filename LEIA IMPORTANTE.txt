@@ -1,0 +1,1 @@
+Caso de erro ao executar o programa, tem que adicionar as referências do Microsoft.Office.Interop.Excel e os pacotes do NuGet Microsoft.Office.Interop.Excel e o ITextSharp.

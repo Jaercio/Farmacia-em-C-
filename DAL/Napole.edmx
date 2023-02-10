@@ -1,0 +1,449 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="PizzariaNapoleModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2005" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Categorias">
+          <Key>
+            <PropertyRef Name="categoriaId" />
+          </Key>
+          <Property Name="categoriaId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="categoriaNome" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="categoriaDescricao" Type="nvarchar" MaxLength="150" />
+        </EntityType>
+        <EntityType Name="Clientes">
+          <Key>
+            <PropertyRef Name="clienteId" />
+          </Key>
+          <Property Name="clienteId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="clienteNome" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="clienteEndereco" Type="nvarchar" MaxLength="80" Nullable="false" />
+          <Property Name="clienteTelefone" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="clienteEmail" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Fornecedores">
+          <Key>
+            <PropertyRef Name="fornecedorId" />
+          </Key>
+          <Property Name="fornecedorId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="fornecedorNome" Type="nvarchar" MaxLength="80" Nullable="false" />
+          <Property Name="fornecedorEndereco" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="fornecedorTelefone" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="fornecedorEmail" Type="nvarchar" MaxLength="80" Nullable="false" />
+          <Property Name="fornecedorHome" Type="nvarchar" MaxLength="100" />
+          <Property Name="categoriaId" Type="int" />
+        </EntityType>
+        <EntityType Name="Itens">
+          <Key>
+            <PropertyRef Name="itemId" />
+          </Key>
+          <Property Name="itemId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="pedidoId" Type="int" Nullable="false" />
+          <Property Name="produtoId" Type="int" Nullable="false" />
+          <Property Name="itemValor" Type="money" />
+          <Property Name="itemQuantidade" Type="int" />
+        </EntityType>
+        <EntityType Name="Pedidos">
+          <Key>
+            <PropertyRef Name="pedidoId" />
+          </Key>
+          <Property Name="pedidoId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="clienteId" Type="int" Nullable="false" />
+          <Property Name="pedidoData" Type="datetime" Nullable="false" />
+          <Property Name="pedidoEntrega" Type="datetime" />
+          <Property Name="pedidoValor" Type="money" />
+          <Property Name="pedidoStatus" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Produtos">
+          <Key>
+            <PropertyRef Name="produtoId" />
+          </Key>
+          <Property Name="produtoId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="produtoNome" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="produtoPreco" Type="money" Nullable="false" />
+          <Property Name="produtoDesconto" Type="money" Nullable="false" />
+          <Property Name="produtoImagem" Type="varbinary(max)" />
+          <Property Name="produtoCategoriaId" Type="int" />
+        </EntityType>
+        <EntityType Name="Usuarios">
+          <Key>
+            <PropertyRef Name="usuarioId" />
+          </Key>
+          <Property Name="usuarioId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="usuarioNome" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="usuarioSenha" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="usuarioPerfil" Type="nchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Fornecedores_Categorias">
+          <End Role="Categorias" Type="Self.Categorias" Multiplicity="0..1" />
+          <End Role="Fornecedores" Type="Self.Fornecedores" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categorias">
+              <PropertyRef Name="categoriaId" />
+            </Principal>
+            <Dependent Role="Fornecedores">
+              <PropertyRef Name="categoriaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Itens_Pedidos">
+          <End Role="Pedidos" Type="Self.Pedidos" Multiplicity="1" />
+          <End Role="Itens" Type="Self.Itens" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pedidos">
+              <PropertyRef Name="pedidoId" />
+            </Principal>
+            <Dependent Role="Itens">
+              <PropertyRef Name="pedidoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Itens_Produtos">
+          <End Role="Produtos" Type="Self.Produtos" Multiplicity="1" />
+          <End Role="Itens" Type="Self.Itens" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Produtos">
+              <PropertyRef Name="produtoId" />
+            </Principal>
+            <Dependent Role="Itens">
+              <PropertyRef Name="produtoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Pedidos_Clientes">
+          <End Role="Clientes" Type="Self.Clientes" Multiplicity="1" />
+          <End Role="Pedidos" Type="Self.Pedidos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clientes">
+              <PropertyRef Name="clienteId" />
+            </Principal>
+            <Dependent Role="Pedidos">
+              <PropertyRef Name="clienteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Produtos_Categorias">
+          <End Role="Categorias" Type="Self.Categorias" Multiplicity="0..1" />
+          <End Role="Produtos" Type="Self.Produtos" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categorias">
+              <PropertyRef Name="categoriaId" />
+            </Principal>
+            <Dependent Role="Produtos">
+              <PropertyRef Name="produtoCategoriaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PizzariaNapoleModelStoreContainer">
+          <EntitySet Name="Categorias" EntityType="Self.Categorias" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Clientes" EntityType="Self.Clientes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Fornecedores" EntityType="Self.Fornecedores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Itens" EntityType="Self.Itens" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Pedidos" EntityType="Self.Pedidos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Produtos" EntityType="Self.Produtos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuarios" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Fornecedores_Categorias" Association="Self.FK_Fornecedores_Categorias">
+            <End Role="Categorias" EntitySet="Categorias" />
+            <End Role="Fornecedores" EntitySet="Fornecedores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Itens_Pedidos" Association="Self.FK_Itens_Pedidos">
+            <End Role="Pedidos" EntitySet="Pedidos" />
+            <End Role="Itens" EntitySet="Itens" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Itens_Produtos" Association="Self.FK_Itens_Produtos">
+            <End Role="Produtos" EntitySet="Produtos" />
+            <End Role="Itens" EntitySet="Itens" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Pedidos_Clientes" Association="Self.FK_Pedidos_Clientes">
+            <End Role="Clientes" EntitySet="Clientes" />
+            <End Role="Pedidos" EntitySet="Pedidos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Produtos_Categorias" Association="Self.FK_Produtos_Categorias">
+            <End Role="Categorias" EntitySet="Categorias" />
+            <End Role="Produtos" EntitySet="Produtos" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="PizzariaNapoleModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Cliente">
+          <Key>
+            <PropertyRef Name="clienteId" />
+          </Key>
+          <Property Name="clienteId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="clienteNome" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="clienteEndereco" Type="String" MaxLength="80" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="clienteTelefone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="clienteEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Pedidos" Relationship="Self.FK_Pedidos_Clientes" FromRole="Clientes" ToRole="Pedidos" />
+        </EntityType>
+        <EntityType Name="Fornecedor">
+          <Key>
+            <PropertyRef Name="fornecedorId" />
+          </Key>
+          <Property Name="fornecedorId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="fornecedorNome" Type="String" MaxLength="80" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="fornecedorEndereco" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="fornecedorTelefone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="fornecedorEmail" Type="String" MaxLength="80" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="fornecedorHome" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="categoriaId" Type="Int32" />
+          <NavigationProperty Name="Categoria" Relationship="PizzariaNapoleModel.FK_Fornecedores_Categorias" FromRole="Fornecedor" ToRole="Categoria" />
+        </EntityType>
+        <EntityType Name="Item">
+          <Key>
+            <PropertyRef Name="itemId" />
+          </Key>
+          <Property Name="itemId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="pedidoId" Type="Int32" Nullable="false" />
+          <Property Name="produtoId" Type="Int32" Nullable="false" />
+          <Property Name="itemValor" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="itemQuantidade" Type="Int32" />
+          <NavigationProperty Name="Pedido" Relationship="Self.FK_Itens_Pedidos" FromRole="Itens" ToRole="Pedidos" />
+          <NavigationProperty Name="Produto" Relationship="Self.FK_Itens_Produtos" FromRole="Itens" ToRole="Produtos" />
+        </EntityType>
+        <EntityType Name="Pedido">
+          <Key>
+            <PropertyRef Name="pedidoId" />
+          </Key>
+          <Property Name="pedidoId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="clienteId" Type="Int32" Nullable="false" />
+          <Property Name="pedidoData" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="pedidoEntrega" Type="DateTime" Precision="3" />
+          <Property Name="pedidoValor" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="pedidoStatus" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Cliente" Relationship="Self.FK_Pedidos_Clientes" FromRole="Pedidos" ToRole="Clientes" />
+          <NavigationProperty Name="Itens" Relationship="Self.FK_Itens_Pedidos" FromRole="Pedidos" ToRole="Itens" />
+        </EntityType>
+        <EntityType Name="Produto">
+          <Key>
+            <PropertyRef Name="produtoId" />
+          </Key>
+          <Property Name="produtoId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="produtoNome" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="produtoPreco" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="produtoDesconto" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <NavigationProperty Name="Itens" Relationship="Self.FK_Itens_Produtos" FromRole="Produtos" ToRole="Itens" />
+          <Property Name="produtoImagem" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="produtoCategoriaId" Type="Int32" />
+          <NavigationProperty Name="Categoria" Relationship="PizzariaNapoleModel.FK_Produtos_Categorias" FromRole="Produto" ToRole="Categoria" />
+        </EntityType>
+        <EntityType Name="Usuario">
+          <Key>
+            <PropertyRef Name="usuarioId" />
+          </Key>
+          <Property Name="usuarioId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="usuarioNome" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="usuarioSenha" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="usuarioPerfil" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Pedidos_Clientes">
+          <End Role="Clientes" Type="Self.Cliente" Multiplicity="1" />
+          <End Role="Pedidos" Type="Self.Pedido" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Clientes">
+              <PropertyRef Name="clienteId" />
+            </Principal>
+            <Dependent Role="Pedidos">
+              <PropertyRef Name="clienteId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Itens_Pedidos">
+          <End Role="Pedidos" Type="Self.Pedido" Multiplicity="1" />
+          <End Role="Itens" Type="PizzariaNapoleModel.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Pedidos">
+              <PropertyRef Name="pedidoId" />
+            </Principal>
+            <Dependent Role="Itens">
+              <PropertyRef Name="pedidoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Itens_Produtos">
+          <End Role="Produtos" Type="Self.Produto" Multiplicity="1" />
+          <End Role="Itens" Type="PizzariaNapoleModel.Item" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Produtos">
+              <PropertyRef Name="produtoId" />
+            </Principal>
+            <Dependent Role="Itens">
+              <PropertyRef Name="produtoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="PizzariaNapoleEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Clientes" EntityType="Self.Cliente" />
+          <EntitySet Name="Fornecedores" EntityType="PizzariaNapoleModel.Fornecedor" />
+          <EntitySet Name="Itens" EntityType="PizzariaNapoleModel.Item" />
+          <EntitySet Name="Pedidos" EntityType="Self.Pedido" />
+          <EntitySet Name="Produtos" EntityType="Self.Produto" />
+          <EntitySet Name="Usuarios" EntityType="Self.Usuario" />
+          <AssociationSet Name="FK_Pedidos_Clientes" Association="Self.FK_Pedidos_Clientes">
+            <End Role="Clientes" EntitySet="Clientes" />
+            <End Role="Pedidos" EntitySet="Pedidos" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Itens_Pedidos" Association="Self.FK_Itens_Pedidos">
+            <End Role="Pedidos" EntitySet="Pedidos" />
+            <End Role="Itens" EntitySet="Itens" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Itens_Produtos" Association="Self.FK_Itens_Produtos">
+            <End Role="Produtos" EntitySet="Produtos" />
+            <End Role="Itens" EntitySet="Itens" />
+          </AssociationSet>
+          <EntitySet Name="Categorias" EntityType="PizzariaNapoleModel.Categoria" />
+          <AssociationSet Name="FK_Fornecedores_Categorias" Association="PizzariaNapoleModel.FK_Fornecedores_Categorias">
+            <End Role="Categoria" EntitySet="Categorias" />
+            <End Role="Fornecedor" EntitySet="Fornecedores" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Produtos_Categorias" Association="PizzariaNapoleModel.FK_Produtos_Categorias">
+            <End Role="Categoria" EntitySet="Categorias" />
+            <End Role="Produto" EntitySet="Produtos" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Categoria">
+          <Key>
+            <PropertyRef Name="categoriaId" />
+          </Key>
+          <Property Name="categoriaId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="categoriaNome" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="categoriaDescricao" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Fornecedores" Relationship="PizzariaNapoleModel.FK_Fornecedores_Categorias" FromRole="Categoria" ToRole="Fornecedor" />
+          <NavigationProperty Name="Produtos" Relationship="PizzariaNapoleModel.FK_Produtos_Categorias" FromRole="Categoria" ToRole="Produto" />
+        </EntityType>
+        <Association Name="FK_Fornecedores_Categorias">
+          <End Type="PizzariaNapoleModel.Categoria" Role="Categoria" Multiplicity="0..1" />
+          <End Type="PizzariaNapoleModel.Fornecedor" Role="Fornecedor" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categoria">
+              <PropertyRef Name="categoriaId" />
+            </Principal>
+            <Dependent Role="Fornecedor">
+              <PropertyRef Name="categoriaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Produtos_Categorias">
+          <End Type="PizzariaNapoleModel.Categoria" Role="Categoria" Multiplicity="0..1" />
+          <End Type="PizzariaNapoleModel.Produto" Role="Produto" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Categoria">
+              <PropertyRef Name="categoriaId" />
+            </Principal>
+            <Dependent Role="Produto">
+              <PropertyRef Name="produtoCategoriaId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="PizzariaNapoleModelStoreContainer" CdmEntityContainer="PizzariaNapoleEntities">
+          <EntitySetMapping Name="Clientes">
+            <EntityTypeMapping TypeName="PizzariaNapoleModel.Cliente">
+              <MappingFragment StoreEntitySet="Clientes">
+                <ScalarProperty Name="clienteId" ColumnName="clienteId" />
+                <ScalarProperty Name="clienteNome" ColumnName="clienteNome" />
+                <ScalarProperty Name="clienteEndereco" ColumnName="clienteEndereco" />
+                <ScalarProperty Name="clienteTelefone" ColumnName="clienteTelefone" />
+                <ScalarProperty Name="clienteEmail" ColumnName="clienteEmail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Fornecedores">
+            <EntityTypeMapping TypeName="PizzariaNapoleModel.Fornecedor">
+              <MappingFragment StoreEntitySet="Fornecedores">
+                <ScalarProperty Name="categoriaId" ColumnName="categoriaId" />
+                <ScalarProperty Name="fornecedorHome" ColumnName="fornecedorHome" />
+                <ScalarProperty Name="fornecedorId" ColumnName="fornecedorId" />
+                <ScalarProperty Name="fornecedorNome" ColumnName="fornecedorNome" />
+                <ScalarProperty Name="fornecedorEndereco" ColumnName="fornecedorEndereco" />
+                <ScalarProperty Name="fornecedorTelefone" ColumnName="fornecedorTelefone" />
+                <ScalarProperty Name="fornecedorEmail" ColumnName="fornecedorEmail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Itens">
+            <EntityTypeMapping TypeName="PizzariaNapoleModel.Item">
+              <MappingFragment StoreEntitySet="Itens">
+                <ScalarProperty Name="itemId" ColumnName="itemId" />
+                <ScalarProperty Name="pedidoId" ColumnName="pedidoId" />
+                <ScalarProperty Name="produtoId" ColumnName="produtoId" />
+                <ScalarProperty Name="itemValor" ColumnName="itemValor" />
+                <ScalarProperty Name="itemQuantidade" ColumnName="itemQuantidade" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Pedidos">
+            <EntityTypeMapping TypeName="PizzariaNapoleModel.Pedido">
+              <MappingFragment StoreEntitySet="Pedidos">
+                <ScalarProperty Name="pedidoId" ColumnName="pedidoId" />
+                <ScalarProperty Name="clienteId" ColumnName="clienteId" />
+                <ScalarProperty Name="pedidoData" ColumnName="pedidoData" />
+                <ScalarProperty Name="pedidoEntrega" ColumnName="pedidoEntrega" />
+                <ScalarProperty Name="pedidoValor" ColumnName="pedidoValor" />
+                <ScalarProperty Name="pedidoStatus" ColumnName="pedidoStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Produtos">
+            <EntityTypeMapping TypeName="PizzariaNapoleModel.Produto">
+              <MappingFragment StoreEntitySet="Produtos">
+                <ScalarProperty Name="produtoCategoriaId" ColumnName="produtoCategoriaId" />
+                <ScalarProperty Name="produtoImagem" ColumnName="produtoImagem" />
+                <ScalarProperty Name="produtoId" ColumnName="produtoId" />
+                <ScalarProperty Name="produtoNome" ColumnName="produtoNome" />
+                <ScalarProperty Name="produtoPreco" ColumnName="produtoPreco" />
+                <ScalarProperty Name="produtoDesconto" ColumnName="produtoDesconto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Usuarios">
+            <EntityTypeMapping TypeName="PizzariaNapoleModel.Usuario">
+              <MappingFragment StoreEntitySet="Usuarios">
+                <ScalarProperty Name="usuarioId" ColumnName="usuarioId" />
+                <ScalarProperty Name="usuarioNome" ColumnName="usuarioNome" />
+                <ScalarProperty Name="usuarioSenha" ColumnName="usuarioSenha" />
+                <ScalarProperty Name="usuarioPerfil" ColumnName="usuarioPerfil" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categorias">
+            <EntityTypeMapping TypeName="PizzariaNapoleModel.Categoria">
+              <MappingFragment StoreEntitySet="Categorias">
+                <ScalarProperty Name="categoriaDescricao" ColumnName="categoriaDescricao" />
+                <ScalarProperty Name="categoriaNome" ColumnName="categoriaNome" />
+                <ScalarProperty Name="categoriaId" ColumnName="categoriaId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
